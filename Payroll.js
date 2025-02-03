@@ -26,10 +26,16 @@ const PayrollDemoApp = () => {
 
   const addEmployee = () => {
     if (employeeData.name && (employeeData.salary || employeeData.hourlyRate)) {
-      setEmployees([
-        ...employees,
-        { ...employeeData, id: employees.length + 1 },
-      ]);
+      setEmployees(prevEmployees => {
+        const existingEmployeeIndex = prevEmployees.findIndex(emp => emp.name === employeeData.name);
+        if (existingEmployeeIndex !== -1) {
+          const updatedEmployees = [...prevEmployees];
+          updatedEmployees[existingEmployeeIndex] = { ...employeeData, id: updatedEmployees[existingEmployeeIndex].id };
+          return updatedEmployees;
+        } else {
+          return [...prevEmployees, { ...employeeData, id: prevEmployees.length + 1 }];
+        }
+      });
       setEmployeeData({
         name: '',
         salary: '',
